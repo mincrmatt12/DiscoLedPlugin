@@ -1,0 +1,67 @@
+<html>
+<head>
+<title>Test LED Disco</title>
+</head>
+<body>
+<script>
+window.timeoutList = new Array();
+window.intervalList = new Array();
+
+window.oldSetTimeout = window.setTimeout;
+window.oldSetInterval = window.setInterval;
+window.oldClearTimeout = window.clearTimeout;
+window.oldClearInterval = window.clearInterval;
+
+window.setTimeout = function(code, delay) {
+    var retval = window.oldSetTimeout(code, delay);
+    window.timeoutList.push(retval);
+    return retval;
+};
+window.clearTimeout = function(id) {
+    var ind = window.timeoutList.indexOf(id);
+    if(ind >= 0) {
+        window.timeoutList.splice(ind, 1);
+    }
+    var retval = window.oldClearTimeout(id);
+    return retval;
+};
+window.setInterval = function(code, delay) {
+    var retval = window.oldSetInterval(code, delay);
+    window.intervalList.push(retval);
+    return retval;
+};
+window.clearInterval = function(id) {
+    var ind = window.intervalList.indexOf(id);
+    if(ind >= 0) {
+        window.intervalList.splice(ind, 1);
+    }
+    var retval = window.oldClearInterval(id);
+    return retval;
+};
+window.clearAllTimeouts = function() {
+    for(var i in window.timeoutList) {
+        window.oldClearTimeout(window.timeoutList[i]);
+    }
+    window.timeoutList = new Array();
+};
+window.clearAllIntervals = function() {
+    for(var i in window.intervalList) {
+        window.oldClearInterval(window.intervalList[i]);
+    }
+    window.intervalList = new Array();
+};
+</script>
+<script>
+function swap() {dell.led.changeColor(dell.led.colors[t[a]]); a = a + 1; if (a == t.length) {a = 0;} setTimeout(swap, 150);}
+
+t= [];
+a= 0;
+
+for (var taa in dell.led.colors) {t[t.length] = taa;}
+function start() {dell.led.turnOn(); swap();}
+function stop() {window.clearAllIntervals();}
+<script>
+<button type="button" onclick="start();">Start</button>
+<button type="buuton" onclick="stop();">Stop</button>
+</body>
+</html>
